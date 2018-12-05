@@ -1,0 +1,34 @@
+Get-WinEvent -FilterHashtable @{LogName=”Security”;ID=4720} | 
+Select TimeCreated,@{n=”Оператор”;e={([xml]$_.ToXml()).Event.EventData.Data | 
+? {$_.Name -eq “SubjectUserName”} |
+%{$_.’#text’}}},@{n=”Имя пользователя”;e={([xml]$_.ToXml()).Event.EventData.Data | 
+? {$_.Name -eq “SamAccountName”}| %{$_.’#text’}}} | select-object -first 1
+
+Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="Security";ID = 6278} | Select @{{$_.Name -eq “SubjectUserName”} | %{$_.’#text’}} | Select-Object -First 1
+@{n=”LogonType”;e={([xml]$_.ToXml()).Event.EventData.Data
+
+Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="Security";ID = 6278} | 
+Select @{n="User";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq "SubjectUserName"} | 
+%{$_.'#text'}}}, @{n="MAC";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq "CallingStationID"} | 
+%{$_.'#text'}}} | Select-Object -First 1
+
+os.system(r'PowerShell -Command Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="Security";ID = 6278} | Select @{n="User";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq """SubjectUserName"} | 
+            %{$_.''#text''}}}, @{n="""MAC""";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq """CallingStationID"""} |\
+             %{$_.'#text'}}} | Select-Object -First 1')
+             
+Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="Security";ID = 6278} | 
+Select @{n="User";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq "SubjectUserName"} | 
+%{$_.'#text'}}} | Select-Object -First 1
+
+>>> os.system(r'PowerShell -ExecutionPolicy ByPass -Command \"& {Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName=\"Security\";ID = 6278} | Select @{n=\"User\";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq \"SubjectUserName\"} | %{$_.'#text'}}} | Select-Object -First 1}\"')
+
+>>> os.system(r'PowerShell -ExecutionPolicy ByPass -Command "& {Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="Security";ID = 6278 | Select-Object -First 1}"')
+
+
+PowerShell -ExecutionPolicy ByPass -Command "& {Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="""Security""";ID = 6278} | Select @{n="User";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq """SubjectUserName"} | %{$_.''#text''}}} | Select-Object -First 1}"
+
+C:\Users\r.rybin>PowerShell -ExecutionPolicy ByPass -Command "& {Get-WinEvent -ComputerName 192.168.3.20 -FilterHashTable @{LogName="""Security""";ID = 6278} | Select @{n="""User""";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq """SubjectUserName"""} | %{$_.'#text'}}}, @{n="""MAC""";e={([xml]$_.ToXml()).Event.EventData.Data | ? {$_.Name -eq """CallingStationID"""} | %{$_.'#text'}}}  | Select-Object -First 1}"
+
+
+017c.11cb.75bd.06
+0104.b167.2a10.a2
